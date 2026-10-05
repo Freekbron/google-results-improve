@@ -78,11 +78,15 @@ function modifyEligibleBase64Images() {
 
 function addMenuItem() {
   const link = document.querySelector('[role="navigation"] a[href*="/search"');
-  const html = `${link.parentNode.innerHTML}`;
+  const listItem = link?.closest('[role="listitem"]');
+  if (!link || !listItem || !listItem.parentNode) {
+    return;
+  }
+
+  const html = `${listItem.innerHTML}`;
   const text = link.innerText;
-  const newLink = `<div id="google-maps-link">${html.replace(text, 'Google Maps')}</div>`;
-  link.parentNode.parentNode.appendChild(
-    document.createElement('div')
-  ).outerHTML = newLink;
+  const newLink = `<div id="google-maps-link" role="listitem">${html.replace(text, 'Google Maps')}</div>`;
+  listItem.parentNode.appendChild(document.createElement('div')).outerHTML =
+    newLink;
   document.querySelector('#google-maps-link a').href = getMapsUrl();
 }
