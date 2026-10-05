@@ -1,0 +1,22 @@
+{
+  "name": "Freek Google Results Improve",
+  "description": "Enhance your Google search results",
+  "icons": {
+    "64": "./images/favicon.png"
+  },
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_icon": {
+      "64": "./images/favicon.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "js": ["./scripts/content.js"],
+      "css": ["./styles/content.css"],
+      "matches": ["*://*/*"]
+    }
+  ],
+  "permissions": []
+}
