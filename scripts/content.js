@@ -77,16 +77,36 @@ function modifyEligibleBase64Images() {
 }
 
 function addMenuItem() {
-  const link = document.querySelector('[role="navigation"] a[href*="/search"');
+  const link = document.querySelector('[role="navigation"] a[href*="/search"]');
   const listItem = link?.closest('[role="listitem"]');
   if (!link || !listItem || !listItem.parentNode) {
+    return;
+  }
+
+  if (document.querySelector('#google-maps-link')) {
     return;
   }
 
   const html = `${listItem.innerHTML}`;
   const text = link.innerText;
   const newLink = `<div id="google-maps-link" role="listitem">${html.replace(text, 'Google Maps')}</div>`;
-  listItem.parentNode.appendChild(document.createElement('div')).outerHTML =
-    newLink;
-  document.querySelector('#google-maps-link a').href = getMapsUrl();
+  const parent = listItem.parentNode;
+  const moreListItem = Array.from(
+    parent.querySelectorAll('[role="listitem"]')
+  ).find(
+    (item) =>
+      item.parentNode === parent && item.querySelector('[aria-expanded]')
+  );
+
+  if (moreListItem) {
+    // Insert the Google Maps link immediately before the 'More' dropdown item.
+    moreListItem.insertAdjacentHTML('beforebegin', newLink);
+  } else {
+    parent.insertAdjacentHTML('beforeend', newLink);
+  }
+
+  const mapsLink = document.querySelector('#google-maps-link a');
+  if (mapsLink) {
+    mapsLink.href = getMapsUrl();
+  }
 }
